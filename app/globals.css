@@ -118,11 +118,13 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-ulm-grotesk), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-ulm-grotesk), -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
   }
-  
+
   /* Lenis smooth scrolling optimization */
-  html.lenis, html.lenis body {
+  html.lenis,
+  html.lenis body {
     height: auto;
   }
 
@@ -141,9 +143,23 @@
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-akzidenz-grotesk), var(--font-ulm-grotesk), sans-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-akzidenz-grotesk), var(--font-ulm-grotesk),
+      sans-serif;
     font-weight: 900;
+  }
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }

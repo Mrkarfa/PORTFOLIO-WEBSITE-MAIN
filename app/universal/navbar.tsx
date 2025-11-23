@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-// >>> FIX: import from framer-motion (was: "motion/react")
 import { motion, AnimatePresence } from "framer-motion";
+import Magnetic from "../components/Magnetic";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,18 +38,20 @@ export default function Navbar() {
 
           {/* Hamburger Menu (2 lines) - Hidden when menu is open */}
           {!isMenuOpen && (
-            <motion.button
-              onClick={() => setIsMenuOpen(true)}
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="flex flex-col gap-2 w-10 h-10 items-end justify-center group cursor-pointer"
-              aria-label="Toggle menu"
-              type="button"
-            >
-              <motion.span className="w-full h-[2px] bg-white transition-all duration-300 group-hover:w-8" />
-              <motion.span className="w-8 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
-            </motion.button>
+            <Magnetic>
+              <motion.button
+                onClick={() => setIsMenuOpen(true)}
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col gap-2 w-10 h-10 items-end justify-center group cursor-pointer"
+                aria-label="Toggle menu"
+                type="button"
+              >
+                <motion.span className="w-full h-[2px] bg-white transition-all duration-300 group-hover:w-8" />
+                <motion.span className="w-8 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
+              </motion.button>
+            </Magnetic>
           )}
         </div>
       </nav>
@@ -63,7 +65,11 @@ export default function Navbar() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+            transition={{
+              type: "tween",
+              duration: 0.5,
+              ease: [0.76, 0, 0.24, 1],
+            }}
             className="fixed inset-0 bg-[#1a1a1a] z-50 overflow-hidden"
             onClick={() => setIsMenuOpen(false)} // close when clicking outside content
           >
@@ -85,15 +91,16 @@ export default function Navbar() {
                 </motion.div>
 
                 {/* Let's Talk Button */}
-                <motion.button
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="px-10 py-3 border border-white/30 rounded-full text-white text-sm hover:bg-white hover:text-black transition-all duration-300"
-                >
-                  Let's Talk
-                </motion.button>
-
+                <Magnetic>
+                  <motion.button
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="px-10 py-3 border border-white/30 rounded-full text-white text-sm hover:bg-white hover:text-black transition-all duration-300"
+                  >
+                    Let&apos;s Talk
+                  </motion.button>
+                </Magnetic>
                 {/* Close Button (X) */}
                 <button
                   onClick={() => setIsMenuOpen(false)}
@@ -131,7 +138,9 @@ export default function Navbar() {
                           <span className="text-white text-5xl md:text-7xl font-light tracking-tight group-hover:translate-x-4 transition-transform duration-300">
                             {item.name}
                           </span>
-                          <span className="text-white/40 text-xl font-light">({item.number})</span>
+                          <span className="text-white/40 text-xl font-light">
+                            ({item.number})
+                          </span>
                         </div>
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: -45 }}
@@ -170,7 +179,9 @@ export default function Navbar() {
                 <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Follow Me Section */}
                   <div>
-                    <h3 className="text-white/60 text-lg mb-6 font-light">Follow Me.</h3>
+                    <h3 className="text-white/60 text-lg mb-6 font-light">
+                      Follow Me.
+                    </h3>
                     <div className="flex flex-wrap gap-6">
                       {socialLinks.map((link, index) => (
                         <motion.a
@@ -189,7 +200,12 @@ export default function Navbar() {
                             fill="none"
                             className="transform -rotate-45 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           >
-                            <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                            <path
+                              d="M3 8H13M13 8L8 3M13 8L8 13"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                            />
                           </svg>
                         </motion.a>
                       ))}
@@ -198,16 +214,33 @@ export default function Navbar() {
 
                   {/* Stay Connected Section */}
                   <div>
-                    <h3 className="text-white/60 text-lg mb-6 font-light">Stay Connected with Me.</h3>
+                    <h3 className="text-white/60 text-lg mb-6 font-light">
+                      Stay Connected with Me.
+                    </h3>
                     <div className="flex gap-3">
                       <input
                         type="email"
                         placeholder="Type your Email here*"
                         className="flex-1 bg-transparent border-b border-white/30 pb-2 text-white placeholder:text-white/40 focus:outline-none focus:border-white transition-colors duration-300"
                       />
-                      <button className="text-white hover:scale-110 transition-transform duration-300" aria-label="Submit email" type="button">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="transform -rotate-45">
-                          <path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                      <button
+                        className="text-white hover:scale-110 transition-transform duration-300"
+                        aria-label="Submit email"
+                        type="button"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          className="transform -rotate-45"
+                        >
+                          <path
+                            d="M4 10H16M16 10L10 4M16 10L10 16"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                          />
                         </svg>
                       </button>
                     </div>
