@@ -96,7 +96,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="px-10 py-3 border border-white/30 rounded-full text-white text-sm hover:bg-white hover:text-black transition-all duration-300"
+                    className="btn-standard border border-white/30 rounded-full text-white hover:bg-white hover:text-black transition-all duration-300"
                   >
                     Let&apos;s Talk
                   </motion.button>
@@ -224,7 +224,7 @@ export default function Navbar() {
                         className="flex-1 bg-transparent border-b border-white/30 pb-2 text-white placeholder:text-white/40 focus:outline-none focus:border-white transition-colors duration-300"
                       />
                       <button
-                        className="text-white hover:scale-110 transition-transform duration-300"
+                        className="text-white hover:scale-110 transition-transform duration-300 p-2"
                         aria-label="Submit email"
                         type="button"
                       >

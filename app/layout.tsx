@@ -4,32 +4,26 @@ import "./globals.css";
 import SmoothScrolling from "./components/SmoothScrolling";
 import PageTransition from "./components/PageTransition";
 
-const ulmGrotesk = localFont({
+const layGrotesk = localFont({
   src: [
     {
-      path: "../fonts/FontsFreeNetUlmGroteskBold94d4299a1cff25d0157b7ed7aea3accf 1.ttf",
-      weight: "700",
+      path: "../fonts/LayGrotesk-Regular.woff2",
+      weight: "400",
       style: "normal",
     },
     {
-      path: "../fonts/FontsFreeNetUlmGroteskExtrabold0b3118a57784e4d175edb3a9cba99b321.ttf",
-      weight: "800",
+      path: "../fonts/LayGrotesk-Medium.woff2",
+      weight: "500",
       style: "normal",
     },
   ],
-  variable: "--font-ulm-grotesk",
+  variable: "--font-lay-grotesk",
 });
 
-const akzidenzGrotesk = localFont({
-  src: "../fonts/FontsFreeNetAkzidenzGroteskBlack.ttf",
-  variable: "--font-akzidenz-grotesk",
-  weight: "900",
-});
-
-const coconutMovie = localFont({
-  src: "../fonts/FontsFreeNetCoconutMovieDemoRegular.ttf",
-  variable: "--font-coconut-movie",
-  weight: "400",
+const ftSystemMono = localFont({
+  src: "../fonts/FTSystemMono-Medium.woff2",
+  variable: "--font-ft-system-mono",
+  weight: "500",
 });
 
 export const metadata: Metadata = {
@@ -45,12 +39,10 @@ export default function RootLayout({
   return (
     <html>
       <body
-        className={`${ulmGrotesk.variable} ${akzidenzGrotesk.variable} ${coconutMovie.variable} antialiased`}
+        className={`${layGrotesk.variable} ${ftSystemMono.variable} antialiased`}
       >
         <SmoothScrolling>
-          <PageTransition>
-            {children}
-          </PageTransition>
+          <PageTransition>{children}</PageTransition>
         </SmoothScrolling>
       </body>
     </html>

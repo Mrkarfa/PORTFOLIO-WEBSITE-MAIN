@@ -123,7 +123,7 @@ export default function Projects() {
               whileHover={{ scale: 1.05, rotate: -5 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="flex items-center justify-center w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 bg-[#c8ff00] rounded-full text-black font-medium text-sm md:text-base shrink-0 border-2 border-transparent hover:bg-transparent hover:border-[#c8ff00] hover:text-white transition-colors duration-300"
+              className="flex items-center justify-center w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 bg-[#c8ff00] rounded-full text-black font-medium text-sm md:text-base shrink-0 border-2 border-transparent hover:bg-transparent hover:border-[#c8ff00] hover:text-white transition-colors duration-300"
             >
               <div className="text-center leading-tight">
                 <div className="mb-1">VIEW ALL</div>

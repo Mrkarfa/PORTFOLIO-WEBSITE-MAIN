@@ -1,10 +1,35 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 import Image from "next/image";
 import Magnetic from "../components/Magnetic";
 
 export default function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Advanced multi-layer parallax scroll effect
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Background layer - moves slower (creates depth)
+  const yBackground = useTransform(scrollYProgress, [0, 1], [-100, 100]);
+  const scaleBackground = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    [1.15, 1, 1.15]
+  );
+
+  // Content layer - moves at different speed for parallax effect
+  const yContent = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const opacityContent = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0.8]
+  );
+
   const socialLinks = [
     { name: "IN", href: "#", label: "Instagram" },
     { name: "TW", href: "#", label: "Twitter" },
@@ -13,191 +38,219 @@ export default function About() {
   ];
 
   return (
-    <section className="relative min-h-screen bg-[#1a1a1a] text-white py-16 md:py-20 lg:py-24 xl:py-32 px-6 md:px-12 lg:px-16">
-      {/* Top Bar */}
-      <div className="max-w-7xl mx-auto mb-12 md:mb-16">
-        <div className="flex items-center justify-between border-t-2 border-white/60">
-          {/* Section Number */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-white/60 text-sm md:text-base font-light"
-          >
-            02/
-          </motion.div>
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen text-white py-16 md:py-20 lg:py-24 xl:py-32 px-6 md:px-12 lg:px-16 overflow-hidden"
+    >
+      {/* Multi-Layer Parallax Background */}
+      <motion.div
+        style={{ y: yBackground, scale: scaleBackground }}
+        className="absolute inset-0 overflow-hidden -z-10"
+        transition={{ type: "spring", stiffness: 50, damping: 30 }}
+      >
+        {/* Beach background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1920&q=80&auto=format&fit=crop')`,
+            filter: "blur(10px) grayscale(100%)",
+            opacity: 0.4,
+          }}
+        />
 
-          {/* About Label */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-white/80 text-sm md:text-base font-light tracking-wider"
-          >
-            ABOUT
-          </motion.div>
+        {/* Dark overlay for contrast */}
+        <div className="absolute inset-0 bg-black" style={{ opacity: 0.85 }} />
+      </motion.div>
 
-          {/* Social Links */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-2 text-sm md:text-base font-light"
-          >
-            {socialLinks.map((link, index) => (
-              <span key={link.name}>
-                <a
-                  href={link.href}
-                  className="text-white/60 hover:text-white transition-colors duration-300"
-                  aria-label={link.label}
-                >
-                  {link.name}
-                </a>
-                {index < socialLinks.length - 1 && (
-                  <span className="text-white/40 mx-1">/</span>
-                )}
-              </span>
-            ))}
-            <span className="text-white/40 mx-1">/</span>
-            <span className="text-white/60">04</span>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 mb-16 md:mb-20 lg:mb-24">
-          {/* Left Column - Profile Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex justify-center lg:justify-start"
-          >
-            <div className="relative w-full max-w-sm aspect-square rounded-3xl overflow-hidden border-2 border-white/10">
-              <Image
-                src="/profile_picture_hero_1763550784798.png"
-                alt="Souvik Karfa"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </motion.div>
-
-          {/* Right Column - Bio Text with Scroll Reveal */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex items-center"
-          >
-            <motion.p
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-white"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
+      {/* Content Layer - Above Background with Parallax */}
+      <motion.div
+        className="relative z-10"
+        style={{ y: yContent, opacity: opacityContent }}
+      >
+        <div className="max-w-7xl mx-auto mb-12 md:mb-16">
+          <div className="flex items-center justify-between border-t-2 border-white/60">
+            {/* Section Number */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-white/60 text-sm md:text-base font-light"
             >
-              {`I'm a Self Taught Full stack Developer Based on Kolkata, west Bengal Specializing in Designing & Developing, Creative Direction, and Iconography. I have completed my Education from Biju Pattanaik University of Technology, Bhubaneswer, Odisha. We Design Experiences to Connect in Authentic & Unexpected ways. In the Free-time enjoy to Explore the world & enjoy to eat Chinese Stuff.`
-                .split(" ")
-                .map((word, index) => {
-                  const isEducation = word === "Education";
-                  return (
-                    <motion.span
-                      key={index}
-                      variants={{
-                        hidden: { opacity: 0, y: 20 },
-                        visible: { opacity: 1, y: 0 },
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        delay: index * 0.03,
-                        ease: "easeOut",
-                      }}
-                      className={
-                        isEducation ? "underline underline-offset-4" : ""
-                      }
-                    >
-                      {word}{" "}
-                    </motion.span>
-                  );
-                })}
-            </motion.p>
-          </motion.div>
-        </div>
+              02/
+            </motion.div>
 
-        {/* Bottom Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8">
-          {/* Large Name */}
-          <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
+            {/* About Label */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white leading-none mb-4"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-white/80 text-sm md:text-base font-light tracking-wider"
             >
-              Souvik Karfa
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              ABOUT
+            </motion.div>
+
+            {/* Social Links */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-white/60 text-sm md:text-base lg:text-lg font-light"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center gap-2 text-sm md:text-base font-light"
             >
-              A Self Taught Full Stack Developer by Passion,
-              <br />
-              based in Kolkata, West Bengal.
-            </motion.p>
+              {socialLinks.map((link, index) => (
+                <span key={link.name}>
+                  <a
+                    href={link.href}
+                    className="text-white/60 hover:text-white transition-colors duration-300"
+                    aria-label={link.label}
+                  >
+                    {link.name}
+                  </a>
+                  {index < socialLinks.length - 1 && (
+                    <span className="text-white/40 mx-1">/</span>
+                  )}
+                </span>
+              ))}
+              <span className="text-white/40 mx-1">/</span>
+              <span className="text-white/60">04</span>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 mb-16 md:mb-20 lg:mb-24">
+            {/* Left Column - Profile Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="flex justify-center lg:justify-start"
+            >
+              <div className="relative w-full max-w-sm aspect-square rounded-3xl overflow-hidden border-2 border-white/10">
+                <Image
+                  src="/profile_picture_hero_1763550784798.png"
+                  alt="Souvik Karfa"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </motion.div>
+
+            {/* Right Column - Bio Text with Scroll Reveal */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex items-center"
+            >
+              <motion.p
+                className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-white"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+              >
+                {`I'm a Self Taught Full stack Developer Based on Kolkata, west Bengal Specializing in Designing & Developing, Creative Direction, and Iconography. I have completed my Education from Biju Pattanaik University of Technology, Bhubaneswer, Odisha. We Design Experiences to Connect in Authentic & Unexpected ways. In the Free-time enjoy to Explore the world & enjoy to eat Chinese Stuff.`
+                  .split(" ")
+                  .map((word, index) => {
+                    const isEducation = word === "Education";
+                    return (
+                      <motion.span
+                        key={index}
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        transition={{
+                          duration: 0.3,
+                          delay: index * 0.03,
+                          ease: "easeOut",
+                        }}
+                        className={
+                          isEducation ? "underline underline-offset-4" : ""
+                        }
+                      >
+                        {word}{" "}
+                      </motion.span>
+                    );
+                  })}
+              </motion.p>
+            </motion.div>
           </div>
 
-          {/* Learn More Button */}
-          <Magnetic>
-            <motion.a
-              href="/about/details"
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="flex items-center justify-center w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 bg-[#c8ff00] rounded-full text-black font-medium text-sm md:text-base shrink-0 group border-2 border-transparent hover:bg-transparent hover:border-[#c8ff00] hover:text-white transition-colors duration-300"
-            >
-              <div className="text-center">
-                <div className="mb-1">LEARN</div>
-                <div>MORE</div>
-                <motion.div
-                  className="mt-1 flex justify-center"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="transform"
+          {/* Bottom Section */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8">
+            {/* Large Name */}
+            <div>
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white leading-none mb-4"
+              >
+                Souvik Karfa
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="text-white/60 text-sm md:text-base lg:text-lg font-light"
+              >
+                A Self Taught Full Stack Developer by Passion,
+                <br />
+                based in Kolkata, West Bengal.
+              </motion.p>
+            </div>
+
+            {/* Learn More Button */}
+            <Magnetic>
+              <motion.a
+                href="/about/details"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                className="flex items-center justify-center w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 bg-[#c8ff00] rounded-full text-black font-medium text-sm md:text-base shrink-0 group border-2 border-transparent hover:bg-transparent hover:border-[#c8ff00] hover:text-white transition-colors duration-300"
+              >
+                <div className="text-center">
+                  <div className="mb-1">LEARN</div>
+                  <div>MORE</div>
+                  <motion.div
+                    className="mt-1 flex justify-center"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <path
-                      d="M5 12H19M19 12L12 5M19 12L12 19"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </motion.div>
-              </div>
-            </motion.a>
-          </Magnetic>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="transform"
+                    >
+                      <path
+                        d="M5 12H19M19 12L12 5M19 12L12 19"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </motion.div>
+                </div>
+              </motion.a>
+            </Magnetic>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
